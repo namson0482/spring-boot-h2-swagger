@@ -3,7 +3,7 @@
 Before run application. You make sure your company already install tools below:
 	
  - Maven 3.8.1 or later
- - JDK 11.0.13 or later. Source code already checked with jdk 11.0.13 and jdk 15. Both run as well. 
+ - JDK 11.0.13 or later. Source code already checked with jdk 11.0.13 and jdk 15. Both run as well. It can't run with jdk version jdk 1.8
  - Port 8080 of computer must be available (can customize port in application.properties)
  - Spring Core, Hibernate, Swagger, Lombok, Mapstruct.
  
@@ -46,3 +46,10 @@ After the project is up and running DB, Services and Swagger-UI can be accessed 
 		 
  - Swagger-UI: You can use the Web Browser and open the URL below to invoke Restful via Swagger-UI
      - localhost:8080/swagger-ui.html
+ 
+ - See Coverage of JUnit Test
+   - mvn clean install jacoco:report
+   - open PROJECT_BASE_DIR/target/site/jacoco/index.html
+ 
+ - Notes: In this project, I configure FetchType.EAGER between Device and Weather, Weather and Temperature. Depend on actual data, we can change configuration at here to improve performance.  
+   

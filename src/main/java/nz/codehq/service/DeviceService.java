@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface DeviceService {
     Device addNewDevice(DeviceRequestDTO deviceRequestDTO);
-    List<DeviceResponseDTO> getAllDevices() throws ParseException;
+    List<DeviceResponseDTO> getAllDevices() ;
     DeviceResponseDTO getByDeviceId(String deviceId, String startTimestamp, String endTimestamp);
 }

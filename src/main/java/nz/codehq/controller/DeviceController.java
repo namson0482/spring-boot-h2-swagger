@@ -33,7 +33,7 @@ public class DeviceController {
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found") })
 
     @GetMapping()
-    public ResponseEntity<Object>  getDevices() throws ParseException {
+    public ResponseEntity<Object>  getDevices() {
         List<DeviceResponseDTO> deviceResponseDTOList = deviceService.getAllDevices();
         return new ResponseEntity<>(deviceResponseDTOList, HttpStatus.OK);
     }

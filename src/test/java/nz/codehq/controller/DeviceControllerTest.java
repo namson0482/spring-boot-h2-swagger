@@ -120,28 +120,73 @@ class DeviceControllerTest {
     @DisplayName("testGetDeviceById: test successfully")
     @Test
     void testGetDeviceById() {
-        when(deviceService.getByDeviceId(anyString(), null, null)).thenReturn(deviceResponseDTO);
+
+        when(deviceService.getByDeviceId(anyString(), isNull(), isNull()))
+                .thenReturn(deviceResponseDTO);
         underTest.getDeviceById("xyz123", null, null);
-        verify(deviceService, times(1)).getByDeviceId(anyString(), null, null);
+        verify(deviceService, times(1)).getByDeviceId(anyString(), isNull(), isNull());
     }
 
-    @DisplayName("testGetDeviceById: deviceId is not exists")
+    @DisplayName("testGetDeviceByIdNotExists: deviceId is not exists")
     @Test
     void testGetDeviceByIdNotExists() {
 
         CustomException notExistsException = new CustomException("2000","Device Id not exists");
-        when(deviceService.getByDeviceId(anyString(), null, null)).thenThrow(notExistsException);
+        when(deviceService.getByDeviceId(anyString(), isNull(), isNull())).thenThrow(notExistsException);
         ResponseEntity<Object> obj =  underTest.getDeviceById("xyz123", null, null);
         assertEquals("2000", ((CustomErrorResponse)obj.getBody()).getErrorCode());
-        verify(deviceService, times(1)).getByDeviceId(anyString(), null, null);
+        verify(deviceService, times(1)).getByDeviceId(anyString(), isNull(), isNull());
     }
 
-    @DisplayName("addDevice: add new device successfully")
+    @DisplayName("testAddDeviceSuccess: add new device successfully")
     @Test
-    void testAddDevice() {
+    void testAddDeviceSuccess() {
 
         when(deviceService.addNewDevice(any(DeviceRequestDTO.class))).thenReturn(device);
         underTest.addDevice(deviceRequestDTO);
         verify(deviceService, times(1)).addNewDevice(any(DeviceRequestDTO.class));
+    }
+
+    @DisplayName("testAddDeviceException: add new device with exception")
+    @Test
+    void testAddDeviceException() {
+
+        CustomException deviceIdIsInvalidException = new CustomException("2001","Device Id is invalid");
+        when(deviceService.addNewDevice(any(DeviceRequestDTO.class))).thenThrow(deviceIdIsInvalidException);
+        underTest.addDevice(deviceRequestDTO);
+        verify(deviceService, times(1)).addNewDevice(any(DeviceRequestDTO.class));
+    }
+
+    @DisplayName("testGetDevicesSuccess: get devices list successfully ")
+    @Test
+    void testGetDevicesSuccess() {
+        List<TemperatureResponseDTO> listTemperatureResponseDTO = new ArrayList<>();
+        TemperatureResponseDTO temperatureResponseDTO = TemperatureResponseDTO.builder()
+                .unit("C")
+                .value(123f)
+                .build();
+        listTemperatureResponseDTO.add(temperatureResponseDTO);
+
+        List<WeatherResponseDTO> listWeatherRequestDTO = new ArrayList<>();
+        WeatherResponseDTO weatherResponseDTO = WeatherResponseDTO.builder()
+                .deviceId("abc123")
+                .humidity("123")
+                .timestamp("2021-12-12")
+                .listTemperatureResponseDTO(listTemperatureResponseDTO)
+                .build();
+        listWeatherRequestDTO.add(weatherResponseDTO);
+
+        List<DeviceResponseDTO> deviceResponseDTOList = new ArrayList<>();
+        DeviceResponseDTO deviceResponseDTO = DeviceResponseDTO.builder()
+                .deviceId("abc123")
+                .latitude(123f)
+                .longitude(322f)
+                .listWeatherRequestDTO(listWeatherRequestDTO)
+                .build();
+        deviceResponseDTOList.add(deviceResponseDTO);
+
+        when(deviceService.getAllDevices()).thenReturn(deviceResponseDTOList);
+        underTest.getDevices();
+        verify(deviceService, times(1)).getAllDevices();
     }
 }
